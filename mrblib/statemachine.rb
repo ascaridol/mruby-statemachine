@@ -16,24 +16,19 @@ module StateMachine
 
   attr_reader :state
 
-  def transition(new_state, &block)
-    if @state && @state.name == new_state
-      self.instance_eval(&block) if block
-      return
-    end
+  def transition(new_state)
+    return if @state && @state.name == new_state
 
     unless next_state = self.class.states[new_state]
       raise ArgumentError, "state #{new_state} doesn't exist"
     end
     if @state
       if @state.valid_transition?(new_state)
-        self.instance_eval(&block) if block
         next_state.call(self)
       else
         raise ArgumentError, "cannot transition to #{new_state}"
       end
     else
-      self.instance_eval(&block) if block
       next_state.call(self)
     end
 
