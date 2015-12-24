@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/ascaridol/mruby-statemachine.svg)](https://travis-ci.org/ascaridol/mruby-statemachine)
 # mruby-statemachine
 A tiny State Machine for mruby
 
