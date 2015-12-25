@@ -1,6 +1,6 @@
 module StateMachine
   def self.included(klass)
-    klass.send :extend, ClassMethods
+    klass.extend(ClassMethods)
   end
 
   module ClassMethods
@@ -14,16 +14,16 @@ module StateMachine
     end
   end
 
-  attr_reader :state
+  attr_reader :state, :current_state
 
   def transition(new_state)
-    return if @state && @state.name == new_state
+    return if @current_state && @current_state.name == new_state
 
     unless next_state = self.class.states[new_state]
       raise ArgumentError, "state #{new_state} doesn't exist"
     end
-    if @state
-      if @state.valid_transition?(new_state)
+    if @current_state
+      if @current_state.valid_transition?(new_state)
         next_state.call(self)
       else
         raise ArgumentError, "cannot transition to #{new_state}"
@@ -32,7 +32,8 @@ module StateMachine
       next_state.call(self)
     end
 
-    @state = next_state
+    @state = new_state
+    @current_state = next_state
     self
   end
 
