@@ -10,6 +10,9 @@ module StateMachine
 
     def state(name, transitions = nil, &block)
       states[name] = State.new(name, transitions, &block)
+      define_method("#{name}?") do
+        @state == name
+      end
       self
     end
   end
